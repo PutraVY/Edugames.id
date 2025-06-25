@@ -1,540 +1,119 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neraca Penjumlahan</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Styling untuk neraca yang lebih realistis */
-    .balance-container {
-      height: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 30px;
-      position: relative;
-    }
-    
-    .balance-stand {
-      width: 20px;
-      height: 200px;
-      background: linear-gradient(to right, #666, #444);
-      border-radius: 10px 10px 0 0;
-      position: relative;
-      z-index: 10;
-    }
-    
-    .balance-stand::after {
-      content: '';
-      position: absolute;
-      bottom: -30px;
-      left: -40px;
-      width: 100px;
-      height: 30px;
-      background: linear-gradient(to right, #555, #333);
-      border-radius: 5px;
-    }
-    
-    .balance-pivot {
-      width: 40px;
-      height: 40px;
-      background: #333;
-      border-radius: 50%;
-      position: absolute;
-      top: 90px;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .balance-pivot::before {
-      content: '';
-      width: 20px;
-      height: 20px;
-      background: #555;
-      border-radius: 50%;
-    }
-    
-    .balance-arm {
-      width: 400px;
-      height: 10px;
-      background: linear-gradient(to bottom, #888, #555);
-      border-radius: 5px;
-      position: absolute;
-      top: 110px;
-      transform-origin: center;
-      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      z-index: 5;
-    }
-    
-    .balance-string {
-      width: 4px;
-      height: 100px;
-      background: linear-gradient(to bottom, #777, #555);
-      position: absolute;
-      top: 10px;
-    }
-    
-    .balance-plate {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #f9f9f9, #e0e0e0);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.1);
-      position: absolute;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.8rem;
-      border: 4px solid #bbb;
-      top: 110px;
-    }
-    
-    .left-plate {
-      left: 60px;
-      color: #3b82f6;
-      border-color: #93c5fd;
-    }
-    
-    .right-plate {
-      right: 60px;
-      color: #10b981;
-      border-color: #a7f3d0;
-    }
-    
-    .number-option {
-      transition: all 0.3s ease;
-      transform: scale(1);
-      cursor: pointer;
-    }
-    
-    .number-option:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    .number-option.selected {
-      transform: scale(0.95);
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-      background-color: #e0e7ff;
-    }
-    
-    .animate-scale {
-      animation: scalePulse 0.5s ease;
-    }
-    
-    @keyframes scalePulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    
-    .xp-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #8b5cf6, #ec4899);
-      color: white;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      z-index: 100;
-    }
-    
-    .glow-effect {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
-    }
-    
-    .fade-in {
-      animation: fadeIn 0.5s ease-in;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .pop-in {
-      animation: popIn 0.3s ease-out;
-    }
-    @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .button-press {
-      transition: transform 0.1s, background-color 0.3s;
-    }
-    .button-press:active {
-      transform: scale(0.95);
-    }
-    .game-card {
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    }
-    .game-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
-    }
-    .progress-bar {
-      height: 10px;
-      border-radius: 5px;
-      background: #dcfce7;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #4ade80, #22c55e);
-      transition: width 0.5s ease;
+    .scale-arm {
+      transform-origin: center left;
+      transition: transform 0.3s ease;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen flex flex-col items-center justify-center p-4 font-sans">
-  
-  <!-- Intro Screen -->
-  <div id="intro" class="max-w-3xl w-full bg-white p-6 rounded-2xl shadow-xl border border-purple-100 game-card">
-    <h2 class="text-3xl font-bold text-purple-700 mb-6 text-center">Cara Bermain Neraca Penjumlahan</h2>
-    
-    <div class="flex flex-col md:flex-row gap-6">
-      <div class="flex-1">
-        <div class="flex items-start mb-4">
-          <div class="bg-purple-100 p-3 rounded-full mr-3">
-            <i class="fas fa-balance-scale text-purple-600 text-xl"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-purple-800 mb-1">Seimbangkan Neraca</h3>
-            <p class="text-gray-700">
-              Neraca harus seimbang dengan menjumlahkan angka di kedua sisi.
-            </p>
-          </div>
-        </div>
-        
-        <div class="flex items-start mb-4">
-          <div class="bg-green-100 p-3 rounded-full mr-3">
-            <i class="fas fa-calculator text-green-600 text-xl"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-green-800 mb-1">Pilih Angka</h3>
-            <p class="text-gray-700">
-              Pilih angka-angka yang tepat di sisi kanan untuk menyeimbangkan sisi kiri.
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="flex-1">
-        <div class="flex items-start mb-4">
-          <div class="bg-yellow-100 p-3 rounded-full mr-3">
-            <i class="fas fa-star text-yellow-500 text-xl"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-yellow-700 mb-1">Dapatkan XP</h3>
-            <p class="text-gray-700">
-              Setiap jawaban benar memberi <strong class="text-yellow-600">+10 XP</strong>!
-            </p>
-          </div>
-        </div>
-        
-        <div class="flex items-start mb-4">
-          <div class="bg-blue-100 p-3 rounded-full mr-3">
-            <i class="fas fa-chart-line text-blue-600 text-xl"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-blue-800 mb-1">Level Up</h3>
-            <p class="text-gray-700">
-              Semakin tinggi level, semakin sulit tantangannya!
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="mt-8 text-center">
-      <button onclick="startGame()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-lg font-bold px-8 py-4 rounded-full shadow-lg transform transition hover:scale-105 duration-300 flex items-center justify-center mx-auto button-press">
-        <i class="fas fa-play mr-2"></i> Mulai Bermain
+<body class="bg-gradient-to-br from-amber-50 to-yellow-100 min-h-screen p-4 font-sans">
+
+  <!-- Intro -->
+  <div id="intro" class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-xl mb-6 border border-yellow-300">
+    <h2 class="text-2xl font-bold text-yellow-600 text-center mb-4">Cara Bermain Neraca Penjumlahan</h2>
+    <p class="text-gray-700 text-lg text-center mb-6">Tentukan jumlah total benda di sisi kiri dan kanan neraca agar seimbang. Jawaban benar akan menambah XP.</p>
+    <div class="text-center">
+      <button onclick="startGame()" class="bg-yellow-500 hover:bg-yellow-600 text-white text-lg font-bold px-8 py-3 rounded-full shadow-lg transition hover:scale-105">
+        Mulai Bermain
       </button>
     </div>
   </div>
 
   <!-- Game Area -->
-  <div id="gameArea" class="hidden max-w-4xl w-full bg-white p-8 rounded-2xl shadow-xl border border-blue-100 game-card">
-    <div class="mb-6 flex justify-between items-center">
-      <button onclick="backToIntro()" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Cara Bermain
-      </button>
-      
-      <div class="flex items-center space-x-4">
-        <div class="bg-blue-100 text-blue-800 font-bold px-4 py-2 rounded-full">
-          <i class="fas fa-star mr-2"></i>
-          <span id="xpCounter">0</span> XP
-        </div>
-        <div class="bg-purple-100 text-purple-800 font-bold px-4 py-2 rounded-full">
-          Level: <span id="levelCounter">1</span>
-        </div>
+  <div id="gameArea" class="hidden max-w-xl mx-auto bg-white p-6 rounded-xl shadow-xl border border-yellow-300">
+    <div class="flex justify-between mb-4">
+      <button onclick="backToIntro()" class="text-yellow-600 hover:underline font-semibold">&larr; Kembali</button>
+      <div class="text-sm text-gray-600">XP: <span id="xp">0</span></div>
+    </div>
+
+    <div class="text-center mb-4">
+      <h2 class="text-2xl font-bold text-yellow-600">⚖️ Neraca Penjumlahan</h2>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="text-center">
+        <p class="text-gray-700 font-bold mb-2">Sisi Kiri</p>
+        <div id="leftSide" class="text-xl font-mono"></div>
+      </div>
+      <div class="text-center">
+        <p class="text-gray-700 font-bold mb-2">Sisi Kanan</p>
+        <div id="rightSide" class="text-xl font-mono"></div>
       </div>
     </div>
 
-    <div class="mb-6">
-      <h2 class="text-2xl font-bold text-blue-700 text-center">Seimbangkan Neraca Ini</h2>
-      
-      <!-- XP Progress Bar -->
-      <div class="mt-4">
-        <div class="flex justify-between text-sm text-gray-500 mb-1">
-          <span>Progress Level</span>
-          <span><span id="currentXP">0</span>/<span id="nextLevelXP">30</span> XP</span>
-        </div>
-        <div class="progress-bar">
-          <div id="xpProgress" class="progress-fill" style="width: 0%"></div>
-        </div>
-      </div>
+    <div class="text-center mb-4">
+      <label class="block text-gray-700 font-semibold mb-1">Berapa nilai yang hilang?</label>
+      <input type="number" id="answer" class="border-2 border-yellow-300 rounded-full px-4 py-2 w-32 text-xl text-center font-bold">
     </div>
 
-    <!-- Container Neraca -->
-    <div class="balance-container">
-      <div class="balance-stand"></div>
-      <div class="balance-pivot"></div>
-      <div id="balanceArm" class="balance-arm">
-        <!-- Tali Kiri -->
-        <div class="balance-string" style="left: 100px;"></div>
-        <!-- Piring Kiri -->
-        <div id="leftPlate" class="balance-plate left-plate">15</div>
-        
-        <!-- Tali Kanan -->
-        <div class="balance-string" style="right: 100px;"></div>
-        <!-- Piring Kanan -->
-        <div id="rightPlate" class="balance-plate right-plate">0</div>
-      </div>
-    </div>
+    <div id="feedback" class="text-center text-lg font-bold hidden mb-4"></div>
 
-    <!-- Pilihan Angka -->
-    <div class="text-center mt-6">
-      <p class="text-lg mb-4 text-gray-700 font-medium">Pilih angka untuk sisi kanan:</p>
-      <div id="numberChoices" class="flex flex-wrap justify-center gap-4">
-        <!-- Angka pilihan akan di-generate -->
-      </div>
-    </div>
-
-    <!-- Tombol Periksa -->
-    <div class="text-center mt-8">
-      <button id="checkBtn" class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold px-8 py-3 rounded-full shadow-lg transform transition hover:scale-105 duration-300 button-press">
-        Periksa Jawaban
-      </button>
-    </div>
-
-    <!-- Feedback -->
-    <div id="feedback" class="text-center mt-6 text-lg font-bold hidden p-4 rounded-xl">
-      <div class="inline-flex items-center">
-        <i class="fas mr-2"></i>
-        <span id="feedbackText"></span>
-      </div>
-    </div>
-
-    <!-- Tombol Next -->
-    <div class="text-center mt-6 hidden" id="nextBtnContainer">
-      <button onclick="nextRound()" id="nextBtn" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold px-8 py-3 rounded-full shadow-lg transform transition hover:scale-105 duration-300 button-press">
-        Soal Berikutnya <i class="fas fa-arrow-right ml-2"></i>
-      </button>
+    <div class="text-center">
+      <button onclick="checkAnswer()" id="checkBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-3 rounded-full">Periksa Jawaban</button>
+      <button onclick="generateQuestion()" id="nextBtn" class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-full">Soal Berikutnya</button>
     </div>
   </div>
 
 <script>
-  // Game state variables
-  let round = parseInt(localStorage.getItem("round_penjumlahan")) || 0;
-  let selectedNumbers = [];
-  let alreadyCorrect = false;
-  let totalXP = parseInt(localStorage.getItem("xp_neraca")) || 0;
-  let targetValue = 0;
-  let currentLevel = Math.floor(totalXP / 30) + 1;
-  
-  // DOM elements
-  const introElement = document.getElementById("intro");
-  const gameAreaElement = document.getElementById("gameArea");
-  const xpCounter = document.getElementById("xpCounter");
-  const levelCounter = document.getElementById("levelCounter");
-  const xpProgress = document.getElementById("xpProgress");
-  const currentXP = document.getElementById("currentXP");
-  const nextLevelXP = document.getElementById("nextLevelXP");
-  const balanceArm = document.getElementById("balanceArm");
-  const leftPlate = document.getElementById("leftPlate");
-  const rightPlate = document.getElementById("rightPlate");
-  const numberChoices = document.getElementById("numberChoices");
-  const checkBtn = document.getElementById("checkBtn");
-  const feedback = document.getElementById("feedback");
-  const feedbackText = document.getElementById("feedbackText");
-  const nextBtnContainer = document.getElementById("nextBtnContainer");
-  const nextBtn = document.getElementById("nextBtn");
-
-  // Initialize the game
-  function initGame() {
-    xpCounter.textContent = totalXP;
-    updateLevelProgress();
-    
-    // Hide game area initially
-    gameAreaElement.classList.add("hidden");
-    introElement.classList.remove("hidden");
-  }
-
-  // Game functions
-  function backToIntro() {
-    gameAreaElement.classList.add("hidden");
-    introElement.classList.remove("hidden");
-  }
+  let xp = parseInt(localStorage.getItem("xp_neraca")) || 0;
+  let left = 0;
+  let right = 0;
+  let missing = 0;
 
   function startGame() {
-    introElement.classList.add("hidden");
-    gameAreaElement.classList.remove("hidden");
-    nextRound();
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("gameArea").classList.remove("hidden");
+    document.getElementById("xp").textContent = xp;
+    generateQuestion();
   }
 
-  function updateLevelProgress() {
-    currentLevel = Math.floor(totalXP / 30) + 1;
-    levelCounter.textContent = currentLevel;
-    
-    const xpInCurrentLevel = totalXP % 30;
-    const progress = (xpInCurrentLevel / 30) * 100;
-    
-    xpProgress.style.width = `${progress}%`;
-    currentXP.textContent = xpInCurrentLevel;
-    nextLevelXP.textContent = 30;
+  function backToIntro() {
+    document.getElementById("intro").classList.remove("hidden");
+    document.getElementById("gameArea").classList.add("hidden");
   }
 
-  function selectNumber(num, button) {
-    if (selectedNumbers.includes(num)) {
-      selectedNumbers = selectedNumbers.filter(n => n !== num);
-      button.classList.remove('selected', 'bg-indigo-100', 'border-indigo-400');
-    } else {
-      selectedNumbers.push(num);
-      button.classList.add('selected', 'bg-indigo-100', 'border-indigo-400');
-    }
+  function generateQuestion() {
+    const a = Math.floor(Math.random() * 9 + 1);
+    const b = Math.floor(Math.random() * 9 + 1);
+    missing = Math.floor(Math.random() * 10 + 1);
 
-    const rightSum = selectedNumbers.reduce((a, b) => a + b, 0);
-    rightPlate.textContent = rightSum;
-    updateBalance(rightSum);
-  }
+    left = a + b;
+    right = missing;
 
-  function updateBalance(rightSum) {
-    const leftSum = parseInt(leftPlate.textContent);
-    const diff = leftSum - rightSum;
-    let rotation = 0;
-    
-    if (diff > 0) rotation = Math.min(diff * 0.5, 15);
-    else if (diff < 0) rotation = Math.max(diff * 0.5, -15);
-    
-    balanceArm.style.transform = `rotate(${rotation}deg)`;
-    balanceArm.classList.toggle('glow-effect', diff === 0);
+    document.getElementById("leftSide").textContent = `${a} + ${b}`;
+    document.getElementById("rightSide").textContent = `?`;
+    document.getElementById("answer").value = "";
+    document.getElementById("feedback").classList.add("hidden");
+    document.getElementById("checkBtn").classList.remove("hidden");
+    document.getElementById("nextBtn").classList.add("hidden");
   }
 
   function checkAnswer() {
-    if (alreadyCorrect) return;
+    const guess = parseInt(document.getElementById("answer").value);
+    const feedback = document.getElementById("feedback");
 
-    const leftSum = parseInt(leftPlate.textContent);
-    const rightSum = selectedNumbers.reduce((a, b) => a + b, 0);
-
-    if (leftSum === rightSum) {
-      alreadyCorrect = true;
-      totalXP += 10;
-      localStorage.setItem("xp_neraca", totalXP);
-      xpCounter.textContent = totalXP;
-      updateLevelProgress();
-
-      feedback.className = "text-center mt-6 text-lg font-bold p-4 rounded-xl bg-green-100 text-green-700 fade-in";
-      feedbackText.innerHTML = "<i class='fas fa-check-circle mr-2'></i> Benar! Neraca seimbang! +10 XP";
-      feedback.classList.remove("hidden");
-
-      // Create XP badge animation
-      const xpBadge = document.createElement("div");
-      xpBadge.className = "xp-badge animate-scale";
-      xpBadge.innerHTML = "+10 XP <i class='fas fa-star ml-1'></i>";
-      gameAreaElement.appendChild(xpBadge);
-      setTimeout(() => xpBadge.remove(), 2000);
-
-      // Change button to next
-      checkBtn.innerHTML = "➡️ Soal Berikutnya";
-      checkBtn.onclick = nextRound;
-      checkBtn.classList.remove("from-blue-500", "to-indigo-500", "hover:from-blue-600", "hover:to-indigo-600");
-      checkBtn.classList.add("from-green-500", "to-emerald-500", "hover:from-green-600", "hover:to-emerald-600");
-
+    if (guess === left) {
+      xp += 10;
+      localStorage.setItem("xp_neraca", xp);
+      feedback.textContent = "✅ Benar! +10 XP";
+      feedback.className = "text-center text-lg font-bold text-green-600 mb-4";
     } else {
-      feedback.className = "text-center mt-6 text-lg font-bold p-4 rounded-xl bg-red-100 text-red-700 animate-scale";
-      feedbackText.innerHTML = "<i class='fas fa-times-circle mr-2'></i> Belum seimbang. Coba lagi!";
-      feedback.classList.remove("hidden");
+      feedback.textContent = `❌ Salah. Jawaban yang benar adalah ${left}`;
+      feedback.className = "text-center text-lg font-bold text-red-600 mb-4";
     }
+
+    feedback.classList.remove("hidden");
+    document.getElementById("checkBtn").classList.add("hidden");
+    document.getElementById("nextBtn").classList.remove("hidden");
+    document.getElementById("xp").textContent = xp;
   }
-
-  function nextRound() {
-    round++;
-    localStorage.setItem("round_penjumlahan", round);
-    alreadyCorrect = false;
-    selectedNumbers = [];
-    feedback.classList.add("hidden");
-    rightPlate.textContent = "0";
-    numberChoices.innerHTML = "";
-    balanceArm.style.transform = "rotate(0deg)";
-    balanceArm.classList.remove("glow-effect");
-
-    // Reset check button
-    checkBtn.innerHTML = "Periksa Jawaban";
-    checkBtn.onclick = checkAnswer;
-    checkBtn.classList.remove("from-green-500", "to-emerald-500", "hover:from-green-600", "hover:to-emerald-600");
-    checkBtn.classList.add("from-blue-500", "to-indigo-500", "hover:from-blue-600", "hover:to-indigo-600");
-
-    // Difficulty increases with level
-    const minTarget = 10 + currentLevel * 3;
-    const maxTarget = 20 + currentLevel * 5;
-    const jumlahAngka = 2 + Math.floor(currentLevel / 2);
-
-    let validCombo = false;
-    let correctCombo = [];
-
-    while (!validCombo) {
-      targetValue = Math.floor(Math.random() * (maxTarget - minTarget + 1)) + minTarget;
-      let sisa = targetValue;
-      correctCombo = [];
-
-      validCombo = true;
-      for (let i = 0; i < jumlahAngka - 1; i++) {
-        const maxVal = sisa - (jumlahAngka - i - 1);
-        if (maxVal <= 1) {
-          validCombo = false;
-          break;
-        }
-        const rand = Math.floor(Math.random() * (maxVal - 1)) + 1;
-        correctCombo.push(rand);
-        sisa -= rand;
-      }
-
-      if (sisa <= 0) {
-        validCombo = false;
-      } else {
-        correctCombo.push(sisa);
-      }
-    }
-    
-    leftPlate.textContent = targetValue;
-
-    // Generate choices
-    const choices = new Set(correctCombo);
-    while (choices.size < correctCombo.length + 4 + currentLevel) {
-      const rand = Math.floor(Math.random() * (targetValue + 10)) + 1;
-      choices.add(rand);
-    }
-
-    // Create number buttons
-    Array.from(choices).sort((a, b) => a - b).forEach(num => {
-      const button = document.createElement("button");
-      button.className = 'number-option bg-white border-2 border-indigo-200 text-indigo-700 font-bold w-16 h-16 rounded-full text-xl shadow-md pop-in';
-      button.textContent = num;
-      button.onclick = () => selectNumber(num, button);
-      numberChoices.appendChild(button);
-    });
-  }
-
-  // Initialize the game when page loads
-  window.onload = initGame;
 </script>
 
 </body>
