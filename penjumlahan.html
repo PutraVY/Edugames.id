@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penjumlahan | Pilih Mode Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa 0%, #fce4ec 100%);
+    }
+    .locked {
+      filter: grayscale(1);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-6">
+<div class="bg-transparent p-4 rounded-xl text-center">
+  <h2 class="text-xl font-bold text-purple-700 mb-2">Statistik XP</h2>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm text-gray-700 font-semibold">
+    <div class="bg-blue-100 p-3 rounded-xl">Neraca: <span id="xp_neraca">0 XP</span></div>
+    <div class="bg-yellow-100 p-3 rounded-xl">Kuis: <span id="xp_kuis">0 XP</span></div>
+    <div class="bg-green-100 p-3 rounded-xl">Barang: <span id="xp_barang">0 XP</span></div>
+    <div class="bg-purple-100 p-3 rounded-xl">Crypt: <span id="xp_crypt">0 XP</span></div>
+    <div class="bg-pink-100 p-3 rounded-xl col-span-2 md:col-span-1">Gabungan: <span id="xp_total">0 XP</span></div>
+  </div>
+</div>
+
+  <h1 class="text-4xl font-bold text-purple-700 text-center mb-8">🔢 Pilih Mode Game Penjumlahan</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl w-full">
+
+    <div class="bg-white shadow-md rounded-xl p-6 border-l-8 border-blue-400 flex flex-col justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-blue-600 mb-2"><i class="fas fa-balance-scale-right mr-2"></i>Neraca</h2>
+        <p class="text-gray-700">Cocokkan jumlah di sisi kiri dan kanan dengan memilih angka yang tepat.</p>
+      </div>
+      <button onclick="location.href='penjumlahan-neraca.html'" class="bg-blue-500 hover:bg-blue-600 text-white mt-4 py-2 px-4 rounded-full font-bold">Mainkan</button>
+    </div>
+
+    <!-- Kuis Tanpa Henti -->
+    <div class="bg-white shadow-md rounded-xl p-6 border-l-8 border-yellow-400 flex flex-col justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-yellow-600 mb-2"><i class="fas fa-infinity mr-2"></i>Kuis Tanpa Henti</h2>
+        <p class="text-gray-700">Jawab pertanyaan sebanyak mungkin, kesulitan bertambah setiap 5 soal.</p>
+      </div>
+      <button onclick="location.href='penjumlahan-kuis.html'" class="bg-yellow-500 hover:bg-yellow-600 text-white mt-4 py-2 px-4 rounded-full font-bold">Mainkan</button>
+    </div>
+
+    <!-- Barang Sebagai Nilai -->
+    <div class="bg-white shadow-md rounded-xl p-6 border-l-8 border-green-400 flex flex-col justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-green-600 mb-2"><i class="fas fa-box-open mr-2"></i>Barang sebagai Nilai</h2>
+        <p class="text-gray-700">Temukan nilai barang melalui petunjuk dan jumlah total.</p>
+      </div>
+      <button onclick="location.href='penjumlahan-barang.html'" class="bg-green-500 hover:bg-green-600 text-white mt-4 py-2 px-4 rounded-full font-bold">Mainkan</button>
+    </div>
+
+    <div class="bg-white shadow-md rounded-xl p-6 border-l-8 border-purple-400 flex flex-col justify-between locked">
+      <div>
+        <h2 class="text-2xl font-bold text-purple-600 mb-2"><i class="fas fa-lock mr-2"></i>Cryptarithm</h2>
+        <p class="text-gray-700">Tebak nilai huruf yang menyusun angka. <strong>Butuh 300 XP</strong> untuk membuka.</p>
+      </div>
+      <button disabled class="bg-purple-300 text-white mt-4 py-2 px-4 rounded-full font-bold">Terkunci</button>
+    </div>
+
+  </div>
+  <script>
+  function getXP(key) {
+    return parseInt(localStorage.getItem(key)) || 0;
+  }
+
+  function updateXPDisplay() {
+    const xpNeraca = getXP("xp_neraca");
+    const xpKuis = getXP("xp_kuis");
+    const xpBarang = getXP("xp_barang");
+    const xpCrypt = getXP("xp_crypt");
+
+    const xpTotalGabungan = Math.floor((xpNeraca + xpKuis + xpBarang + xpCrypt) / 4);
+
+    document.getElementById("xp_neraca").textContent = `${xpNeraca} XP`;
+    document.getElementById("xp_kuis").textContent = `${xpKuis} XP`;
+    document.getElementById("xp_barang").textContent = `${xpBarang} XP`;
+    document.getElementById("xp_crypt").textContent = `${xpCrypt} XP`;
+    document.getElementById("xp_total").textContent = `${xpTotalGabungan} XP`;
+  }
+
+  updateXPDisplay();
+
+  function updateAllXP() {
+    const xpNeraca = getXP('xp_neraca');
+    const xpKuis = getXP('xp_kuis');
+    const xpBarang = getXP('xp_barang');
+    const xpCrypt = getXP('xp_crypt');
+
+    const xpGabungan = Math.floor((xpNeraca + xpKuis + xpBarang + xpCrypt) / 4);
+
+    document.getElementById('xpNeraca').innerText = `${xpNeraca} XP`;
+    document.getElementById('xpKuis').innerText = `${xpKuis} XP`;
+    document.getElementById('xpBarang').innerText = `${xpBarang} XP`;
+    document.getElementById('xpCrypt').innerText = `${xpCrypt} XP`;
+    document.getElementById('xpTotal').innerText = `${xpGabungan} XP`;
+z
+    if (xpGabungan >= 300) {
+      const cryptCard = document.querySelector('.locked');
+      if (cryptCard) {
+        cryptCard.classList.remove('locked');
+        const button = cryptCard.querySelector('button');
+        button.disabled = false;
+        button.innerText = "Mainkan";
+        button.classList.remove('bg-purple-300');
+        button.classList.add('bg-purple-500', 'hover:bg-purple-600');
+        button.setAttribute('onclick', "location.href='penjumlahan-cryptarithm.html'");
+      }
+    }
+  }
+
+  updateAllXP();
+</script>
+
+
+</body>
+</html>

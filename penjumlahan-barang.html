@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barang sebagai Nilai</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .emoji {
+      font-size: 2.5rem;
+      display: inline-block;
+      margin: 0 6px;
+      transition: transform 0.3s ease;
+    }
+    .emoji:hover {
+      transform: scale(1.2);
+    }
+    .puzzle-box {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 2px solid #86efac;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pop-in {
+      animation: popIn 0.3s ease-out;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .button-press {
+      transition: transform 0.1s, background-color 0.3s;
+    }
+    .button-press:active {
+      transform: scale(0.95);
+    }
+    .game-card {
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    .progress-bar {
+      height: 10px;
+      border-radius: 5px;
+      background: #dcfce7;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ade80, #22c55e);
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-lime-50 to-green-100 min-h-screen flex flex-col items-center justify-center p-4 font-sans">
+  
+  <!-- Intro Screen -->
+  <div id="intro" class="max-w-2xl w-full bg-white p-6 rounded-2xl shadow-xl border border-green-200 mb-6 game-card">
+    <h2 class="text-2xl font-bold text-green-600 mb-4 text-center">Cara Bermain Barang sebagai Nilai</h2>
+
+    <div class="flex items-start mb-4">
+      <div class="bg-green-100 p-3 rounded-full mr-3">
+        <i class="fas fa-box text-green-600 text-xl"></i>
+      </div>
+      <p class="text-gray-700 text-lg flex-1">
+        Setiap barang punya nilai tersembunyi. Kamu harus menebak nilai dari salah satu barang berdasarkan petunjuk penjumlahan.
+      </p>
+    </div>
+
+    <div class="flex items-start mb-4">
+      <div class="bg-yellow-100 p-3 rounded-full mr-3">
+        <i class="fas fa-brain text-yellow-600 text-xl"></i>
+      </div>
+      <p class="text-gray-700 text-lg flex-1">
+        Semakin tinggi levelmu, kombinasi akan semakin sulit. 
+        Fokus dan logika sangat penting!
+      </p>
+    </div>
+    
+    <div class="flex items-start mb-4">
+      <div class="bg-blue-100 p-3 rounded-full mr-3">
+        <i class="fas fa-trophy text-blue-600 text-xl"></i>
+      </div>
+      <p class="text-gray-700 text-lg flex-1">
+        Setiap jawaban benar akan memberikanmu XP. 
+        Kumpulkan XP untuk naik level dan menghadapi tantangan yang lebih sulit!
+      </p>
+    </div>
+
+    <div class="text-center mt-6">
+      <button onclick="startGame()" class="bg-green-500 hover:bg-green-600 text-white text-lg font-bold px-8 py-3 rounded-full shadow-lg transform transition hover:scale-105 duration-300 button-press">
+        <i class="fas fa-play mr-2"></i> Mulai Bermain
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="gameArea" class="hidden max-w-xl w-full">
+    <div class="bg-white p-6 rounded-2xl shadow-xl border border-green-200 game-card">
+      <div class="mb-4 flex justify-between items-center">
+        <button onclick="backToIntro()" class="text-green-600 font-semibold hover:underline">
+          <i class="fas fa-arrow-left mr-1"></i> Kembali ke Cara Bermain
+        </button>
+        <div class="text-sm text-gray-600">
+          XP: <span id="xp" class="font-bold">0</span> | Level: <span id="level" class="font-bold">1</span>
+        </div>
+      </div>
+
+      <h1 class="text-3xl font-bold text-green-700 text-center mb-4">🔢 Tebak Nilai Barang</h1>
+      
+      <!-- XP Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between text-xs text-gray-500 mb-1">
+          <span>Level Progress</span>
+          <span><span id="currentXP">0</span>/<span id="nextLevelXP">20</span> XP</span>
+        </div>
+        <div class="progress-bar">
+          <div id="xpProgress" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div id="puzzleBox" class="puzzle-box p-5 text-center mb-6 text-xl font-bold space-y-4 fade-in"></div>
+
+      <div class="text-center mb-4">
+        <label class="block text-gray-600 font-semibold mb-1">Nilai dari <span id="targetLabel" class="inline-block"></span> adalah:</label>
+        <input 
+          type="number" 
+          id="userAnswer" 
+          class="text-center border-2 border-green-300 rounded-full px-4 py-3 w-32 text-xl font-bold shadow-sm focus:ring-2 focus:ring-green-400 focus:border-green-500 transition-all" 
+          placeholder="?"
+          autofocus
+        />
+      </div>
+
+      <div id="feedback" class="text-center text-lg font-bold hidden mb-4 fade-in"></div>
+
+      <div class="text-center">
+        <button onclick="checkAnswer()" id="checkBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-full mr-2 button-press">
+          <i class="fas fa-check-circle mr-2"></i> Periksa Jawaban
+        </button>
+        <button onclick="nextPuzzle()" id="nextBtn" class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-full button-press">
+          <i class="fas fa-arrow-right mr-2"></i> Soal Berikutnya
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const items = [
+  { id: "🍔", name: "burger" },
+  { id: "🍟", name: "kentang" },
+  { id: "🍕", name: "pizza" },
+  { id: "🍎", name: "apel" },
+  { id: "🍩", name: "donat" },
+  { id: "🧃", name: "jus" },
+  { id: "📦", name: "box" },
+  { id: "🧸", name: "boneka" },
+  { id: "⚽", name: "bola" },
+  { id: "📘", name: "buku" }
+];
+
+let xp = parseInt(localStorage.getItem("xp_barang")) || 0;
+let level = 1;
+let puzzle = {};
+let correctAnswer = 0;
+
+// DOM elements
+const introElement = document.getElementById("intro");
+const gameAreaElement = document.getElementById("gameArea");
+const xpDisplay = document.getElementById("xp");
+const levelDisplay = document.getElementById("level");
+const puzzleBox = document.getElementById("puzzleBox");
+const targetLabel = document.getElementById("targetLabel");
+const userAnswer = document.getElementById("userAnswer");
+const feedback = document.getElementById("feedback");
+const checkBtn = document.getElementById("checkBtn");
+const nextBtn = document.getElementById("nextBtn");
+const xpProgress = document.getElementById("xpProgress");
+const currentXP = document.getElementById("currentXP");
+const nextLevelXP = document.getElementById("nextLevelXP");
+
+// Initialize the game
+function initGame() {
+  xpDisplay.textContent = xp;
+  level = getLevel();
+  levelDisplay.textContent = level;
+  
+  // Update XP progress bar
+  const nextLevel = level * 20;
+  const currentLevelXP = xp - ((level - 1) * 20);
+  const progress = (currentLevelXP / 20) * 100;
+  
+  xpProgress.style.width = `${progress}%`;
+  currentXP.textContent = currentLevelXP;
+  nextLevelXP.textContent = nextLevel;
+  
+  // Hide game area initially
+  gameAreaElement.classList.add("hidden");
+  introElement.classList.remove("hidden");
+}
+
+// Game functions
+function backToIntro() {
+  gameAreaElement.classList.add("hidden");
+  introElement.classList.remove("hidden");
+}
+
+function startGame() {
+  introElement.classList.add("hidden");
+  gameAreaElement.classList.remove("hidden");
+  generatePuzzle();
+}
+
+function getLevel() {
+  return Math.floor(xp / 20) + 1;
+}
+
+function emoji(e) {
+  return `<span class="emoji pop-in">${e}</span>`;
+}
+
+function shuffle(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function generatePuzzle() {
+  level = getLevel();
+  levelDisplay.textContent = level;
+  
+  // Update XP progress bar
+  const nextLevel = level * 20;
+  const currentLevelXP = xp - ((level - 1) * 20);
+  const progress = (currentLevelXP / 20) * 100;
+  
+  xpProgress.style.width = `${progress}%`;
+  currentXP.textContent = currentLevelXP;
+  nextLevelXP.textContent = nextLevel;
+  
+  // Generate puzzle based on level
+  const [a, b, c, d] = shuffle([...items]);
+  const va = Math.floor(Math.random() * 3 + 2); // 2–4
+  const vb = Math.floor(Math.random() * 4 + 2); // 2–5
+  const vc = Math.floor(Math.random() * 5 + 3); // 3–7
+  const vd = Math.floor(Math.random() * 6 + 4); // 4–9
+
+  let html = "";
+
+  if (level <= 3) {
+    // Level 1-3: Simple equations
+    html = `${emoji(a.id)} = ${va} + ${vb}`;
+    puzzle = { target: a.id, value: va + vb };
+  } else if (level <= 6) {
+    // Level 4-6: Two-step equations
+    html = `${emoji(a.id)} = ${va}<br>${emoji(b.id)} + ${emoji(a.id)} = ${vb + va}`;
+    puzzle = { target: b.id, value: vb };
+  } else if (level <= 9) {
+    // Level 7-9: Three-step equations
+    html = `${emoji(a.id)} + ${emoji(b.id)} = ${va + vb}<br>${emoji(b.id)} = ${vb}<br>${emoji(c.id)} = ${vc}`;
+    puzzle = { target: a.id, value: va };
+  } else {
+    // Level 10+: Complex equations
+    html = `
+      ${emoji(a.id)} + ${emoji(b.id)} + ${emoji(c.id)} = ${va + vb + vc}<br>
+      ${emoji(b.id)} = ${vb}<br>
+      ${emoji(c.id)} = ${vc}<br>
+      ${emoji(d.id)} + ${emoji(a.id)} = ${vd + va}
+    `;
+    puzzle = { target: d.id, value: vd };
+  }
+
+  puzzleBox.innerHTML = html;
+  targetLabel.innerHTML = emoji(puzzle.target);
+  userAnswer.value = '';
+  feedback.classList.add("hidden");
+  nextBtn.classList.add("hidden");
+  checkBtn.classList.remove("hidden");
+  userAnswer.focus();
+}
+
+function checkAnswer() {
+  const guess = parseInt(userAnswer.value);
+  
+  if (isNaN(guess)) {
+    feedback.textContent = "❌ Silakan masukkan angka!";
+    feedback.className = "text-center text-lg font-bold text-red-600 mb-4";
+    feedback.classList.remove("hidden");
+    return;
+  }
+
+  if (guess === puzzle.value) {
+    xp += 10;
+    localStorage.setItem("xp_barang", xp);
+    xpDisplay.textContent = xp;
+    feedback.textContent = "✅ Benar! +10 XP";
+    feedback.className = "text-center text-lg font-bold text-green-600 mb-4";
+  } else {
+    feedback.textContent = `❌ Salah. Jawaban: ${puzzle.value}`;
+    feedback.className = "text-center text-lg font-bold text-red-600 mb-4";
+  }
+
+  feedback.classList.remove("hidden");
+  checkBtn.classList.add("hidden");
+  nextBtn.classList.remove("hidden");
+}
+
+function nextPuzzle() {
+  generatePuzzle();
+}
+
+// Initialize the game when page loads
+window.onload = initGame;
+</script>
+
+</body>
+</html>
