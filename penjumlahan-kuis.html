@@ -9,25 +9,114 @@
   <style>
     .countdown { animation: countdown linear forwards; }
     @keyframes countdown { from { width: 100%; } to { width: 0%; } }
+    .game-card { 
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border: 2px solid #fde047;
+      transition: all 0.3s ease;
+    }
+    .game-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12); 
+    }
+    .progress-bar { 
+      height: 10px; 
+      border-radius: 5px; 
+      background: #fef3c7; 
+      overflow: hidden; 
+    }
+    .progress-fill { 
+      height: 100%; 
+      background: linear-gradient(90deg, #fcd34d, #fbbf24); 
+      transition: width 0.5s ease; 
+    }
+
+    .btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  margin: 0.25rem;
+}
+
+.btn-back {
+  background: transparent;
+  border: 2px solid #f39b17;
+  color: #e9e511;
+}
   </style>
 </head>
 <body class="bg-gradient-to-br from-yellow-50 via-pink-50 to-blue-50 min-h-screen p-6 font-sans flex flex-col items-center">
 
-  <!-- Intro Section -->
-  <div id="intro" class="max-w-xl w-full bg-white p-6 rounded-2xl shadow-xl border border-yellow-100">
-    <h2 class="text-2xl font-bold text-yellow-600 mb-4 text-center">Cara Bermain Kuis Penjumlahan</h2>
-    <p class="text-gray-700 text-lg mb-4 text-center">Jawab soal penjumlahan dengan cepat sebelum waktu habis. Jawaban benar akan menambah XP.</p>
-    <div class="text-center">
-      <button onclick="startGame()" class="bg-yellow-500 hover:bg-yellow-600 text-white text-lg font-bold px-8 py-3 rounded-full shadow-lg transition hover:scale-105">Mulai Bermain</button>
+<div id="intro" class="max-w-xl w-full p-6 game-card">
+  <div class="flex justify-between mb-4">
+        <button class="btn btn-back"><a href="penjumlahan.html"> &larr; Kembali</a></button>
+        <div class="text-sm text-gray-600"></div>
+      </div>
+  <div class="text-center mb-8">
+    <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <i class="fas fa-bolt text-yellow-600 text-4xl"></i>
+    </div>
+    <h2 class="text-2xl font-bold text-yellow-600 mb-2">Cara Bermain Kuis Penjumlahan</h2>
+    <p class="text-gray-600">Jawab soal penjumlahan dengan cepat sebelum waktu habis!</p>
+  </div>
+  
+  <div class="space-y-5">
+    <div class="flex items-start">
+      <div class="bg-yellow-100 p-3 rounded-full mr-4 flex-shrink-0">
+        <i class="fas fa-stopwatch text-yellow-600 text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-gray-800 mb-1">Cepat & Tepat</h3>
+        <p class="text-gray-700">Jawab soal penjumlahan sebelum waktu habis</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start">
+      <div class="bg-yellow-100 p-3 rounded-full mr-4 flex-shrink-0">
+        <i class="fas fa-brain text-yellow-600 text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-gray-800 mb-1">Tingkat Kesulitan</h3>
+        <p class="text-gray-700">Semakin tinggi level, semakin sulit soal dan semakin cepat waktu</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start">
+      <div class="bg-yellow-100 p-3 rounded-full mr-4 flex-shrink-0">
+        <i class="fas fa-trophy text-yellow-600 text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-gray-800 mb-1">Dapatkan XP</h3>
+        <p class="text-gray-700">Jawaban benar akan menambah XP dan membuatmu naik level</p>
+      </div>
     </div>
   </div>
+  
+  <div class="text-center mt-8">
+    <button onclick="startGame()" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-8 py-4 rounded-full shadow-lg transition transform hover:scale-105">
+      <i class="fas fa-play mr-2"></i> Mulai Bermain
+    </button>
+  </div>
+</div>
 
   <!-- Game Section -->
   <div id="gameArea" class="hidden max-w-2xl w-full mt-6">
-    <div class="bg-white rounded-2xl shadow-lg p-6">
+    <div class="p-6 game-card">
+      <div class="mb-4">
+        <div class="flex justify-between text-xs text-gray-500 mb-1">
+          <span>Level Progress</span>
+          <span>XP: <span id="xp">0</span> | Level: <span id="level">0</span></span>
+        </div>
+        <div class="progress-bar">
+          <div id="xpProgress" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+      
       <div class="flex justify-between mb-4">
-        <button onclick="backToIntro()" class="text-blue-600 hover:underline font-semibold">&larr; Kembali</button>
-        <div class="text-sm text-gray-600">XP: <span id="xp">0</span> | Level: <span id="level">0</span></div>
+        <button onclick="backToIntro()" class="btn btn-back">&larr; Kembali</button>
+        <div class="text-sm text-gray-600"></div>
       </div>
 
       <h2 class="text-2xl font-bold text-center text-yellow-600 mb-4">⚡ Kuis Cepat Penjumlahan</h2>
@@ -63,6 +152,7 @@
     const choicesContainer = document.getElementById("choices");
     const progressBar = document.getElementById("progressBar");
     const restartBtn = document.getElementById("restartBtn");
+    const xpProgressBar = document.getElementById("xpProgress");
 
     function backToIntro() {
       gameArea.classList.add("hidden");
@@ -76,6 +166,7 @@
       xpDisplay.textContent = xp;
       currentQuestion = 0;
       generateQuestion();
+      updateProgressBar();
     }
 
     function getLevel() {
@@ -86,9 +177,15 @@
       return Math.max(2, 8 - level);
     }
 
+    function updateProgressBar() {
+      const progress = (currentQuestion % 5) / 5 * 100;
+      xpProgressBar.style.width = `${progress}%`;
+    }
+
     function generateQuestion() {
       const level = getLevel();
       levelDisplay.textContent = level;
+      updateProgressBar();
 
       const min = 1 + level * 2;
       const max = 10 + level * 5;
