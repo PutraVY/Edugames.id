@@ -2,145 +2,528 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barang sebagai Nilai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Penjumlahan Barang</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .emoji { font-size: 2.5rem; display: inline-block; margin: 0 6px; transition: transform 0.3s ease; }
-    .emoji:hover { transform: scale(1.2); }
-    .puzzle-box { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 2px solid #86efac; border-radius: 16px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
-    .fade-in { animation: fadeIn 0.5s ease-in; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .pop-in { animation: popIn 0.3s ease-out; }
-    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    .button-press { transition: transform 0.1s, background-color 0.3s; }
-    .button-press:active { transform: scale(0.95); }
-    .game-card { transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); }
-    .game-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12); }
-    .progress-bar { height: 10px; border-radius: 5px; background: #dcfce7; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #4ade80, #22c55e); transition: width 0.5s ease; }
+/* Kartu game utama */
+.game-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 2px solid #bbf7d0;
+  transition: all 0.3s ease;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Header permainan */
+.card-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: #047857;
+  margin-bottom: 1rem;
+}
+
+/* Bar progress */
+.progress-bar {
+  height: 10px;
+  border-radius: 5px;
+  background: #dcfce7;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  transition: width 0.5s ease;
+}
+
+/* Penanda level */
+.level-indicator {
+  background: linear-gradient(135deg, #16a34a, #10b981);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Baris persamaan */
+.equation-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #047857;
+  background: #f0fdf4;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed #bbf7d0;
+}
+
+/* Item dalam persamaan */
+.equation-item span {
+  display: inline-block;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Kolom input */
+.input-group {
+  margin-top: 20px;
+}
+.input-field {
+  border: 2px solid #a7f3d0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease;
+}
+.input-field:focus {
+  border-color: #22c55e;
+  outline: none;
+}
+.input-label {
+  font-weight: bold;
+  color: #047857;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Feedback jawaban */
+.feedback {
+  padding: 12px;
+  font-weight: bold;
+  margin-top: 16px;
+  border-radius: 8px;
+  text-align: center;
+  display: none;
+}
+.feedback.correct {
+  background-color: #d1fae5;
+  color: #065f46;
+  display: block;
+}
+.feedback.incorrect {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  display: block;
+}
+
+/* Tombol */
+.btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  margin: 0.25rem;
+}
+.btn-check {
+  background-color: #4ade80;
+  color: white;
+}
+.btn-check:hover {
+  background-color: #22c55e;
+}
+.btn-hint {
+  background-color: #a7f3d0;
+  color: #065f46;
+}
+.btn-next {
+  background-color: #10b981;
+  color: white;
+}
+.btn-next:hover {
+  background-color: #059669;
+}
+.btn-back {
+  background: transparent;
+  border: 2px solid #bbf7d0;
+  color: #047857;
+}
+.btn-back:hover {
+  background: #f0fdf4;
+}
+
+/* Hint */
+.hint-box {
+  background-color: #f0fdf4;
+  border-left: 5px solid #34d399;
+  padding: 10px 16px;
+  margin-top: 16px;
+  display: none;
+  border-radius: 8px;
+  color: #065f46;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+.hint-icon {
+  color: #22c55e;
+}
+
+/* Animasi */
+.shake {
+  animation: shake 0.3s;
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+.bounce {
+  animation: bounce 0.5s ease;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Responsif */
+@media (max-width: 480px) {
+  .equation-row {
+    font-size: 1.1rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    width: 100%;
+  }
+  .card-header h2 {
+    font-size: 1.4rem;
+  }
+}
+
   </style>
 </head>
-<body class="bg-gradient-to-br from-lime-50 to-green-100 min-h-screen flex flex-col items-center justify-center p-4 font-sans">
+<body class="bg-gradient-to-br from-green-50 via-lime-50 to-emerald-50 min-h-screen p-4 font-sans">
 
-  <div id="intro" class="max-w-2xl w-full bg-white p-6 rounded-2xl shadow-xl border border-green-200 mb-6 game-card">
-    <h2 class="text-2xl font-bold text-green-600 mb-4 text-center">Cara Bermain Barang sebagai Nilai</h2>
-    <p class="text-gray-700 text-lg mb-4">Tebak nilai dari barang berdasarkan petunjuk matematika.</p>
-    <div class="text-center mt-6">
-      <button onclick="startGame()" class="bg-green-500 hover:bg-green-600 text-white text-lg font-bold px-8 py-3 rounded-full shadow-lg transform transition hover:scale-105 duration-300 button-press">
-        <i class="fas fa-play mr-2"></i> Mulai Bermain
-      </button>
+<div id="intro" class="max-w-3xl mx-auto p-6 game-card">
+  <div class="flex justify-between mb-4">
+    <button class="btn btn-back"><a href="penjumlahan.html"> &larr; Kembali</a></button>
+    <div class="level-indicator">
+      <i class="fas fa-crown"></i>
+      <span>Level: <span id="introLevel">1</span></span>
+    </div>
+  </div>
+  <div class="text-center mb-8">
+    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <i class="fas fa-question text-green-600 text-4xl"></i>
+    </div>
+    <h2 class="text-3xl font-bold text-green-700 mb-2">Cara Bermain Penjumlahan Barang</h2>
+    <p class="text-gray-600">Cari tahu nilai dari barang atau gabungan barang melalui petunjuk yang diberikan!</p>
+  </div>
+  <div class="space-y-5">
+    <div class="flex items-start">
+      <div class="bg-green-100 p-3 rounded-full mr-4 flex-shrink-0">
+        <i class="fas fa-box-open text-green-600 text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-gray-800 mb-1">Logika Penjumlahan</h3>
+        <p class="text-gray-700">Gunakan petunjuk untuk mengetahui nilai setiap barang</p>
+      </div>
+    </div>
+    <div class="flex items-start">
+      <div class="bg-green-100 p-3 rounded-full mr-4 flex-shrink-0">
+        <i class="fas fa-level-up-alt text-green-600 text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-gray-800 mb-1">Tingkatkan Level</h3>
+        <p class="text-gray-700">Soal akan semakin sulit dan variatif seiring naiknya level</p>
+      </div>
+    </div>
+    <div class="flex items-start">
+      <div class="bg-green-100 p-3 rounded-full mr-4 flex-shrink-0">
+        <i class="fas fa-star text-green-600 text-xl"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg text-gray-800 mb-1">Dapatkan XP</h3>
+        <p class="text-gray-700">Jawaban benar akan menambah XP dan menaikkan levelmu</p>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-8">
+    <button onclick="startGame()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-4 rounded-full shadow-lg transition transform hover:scale-105">
+      <i class="fas fa-play mr-2"></i> Mulai Bermain
+    </button>
+  </div>
+</div>
+    
+    <!-- Game Area gaya Neraca -->
+    <div id="gameArea" class="game-card hidden">
+      <div class="card-header">
+        <h2>Penjumlahan Barang Bertahap</h2>
+      </div>
+      
+      <div class="card-body">
+        <div class="flex justify-between items-center mb-4">
+          <button onclick="backToIntro()" class="btn btn-back">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali
+          </button>
+          <div class="level-indicator">
+            <i class="fas fa-crown"></i>
+            Level: <span id="level">1</span>
+          </div>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-header">
+            <span>Progress Level</span>
+            <span><span id="currentXP">0</span>/50 XP</span>
+          </div>
+          <div class="progress-bar">
+            <div id="xpProgress" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div id="puzzleBox" class="puzzle-box">
+          <p class="text-center text-gray-500">Memuat soal...</p>
+        </div>
+        
+        <!-- Hint Box -->
+        <div id="hintBox" class="hint-box">
+          <i class="fas fa-lightbulb hint-icon"></i>
+          <span id="hintText"></span>
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">Nilai dari <span id="targetLabel" class="font-bold text-blue-600"></span> adalah:</label>
+          <input type="number" id="userAnswer" class="input-field" placeholder="?" autocomplete="off">
+        </div>
+        
+        <div id="feedback" class="feedback"></div>
+        
+        <div class="button-group">
+          <button onclick="checkAnswer()" id="checkBtn" class="btn btn-check">
+            <i class="fas fa-check mr-2"></i> Periksa
+          </button>
+          <button onclick="showHint()" id="hintBtn" class="btn btn-hint">
+            <i class="fas fa-lightbulb mr-2"></i> Petunjuk
+          </button>
+          <button onclick="nextPuzzle()" id="nextBtn" class="btn btn-next hidden">
+            <i class="fas fa-forward mr-2"></i> Lanjut
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div id="gameArea" class="hidden max-w-xl w-full">
-    <div class="bg-white p-6 rounded-2xl shadow-xl border border-green-200 game-card">
-      <div class="flex justify-between mb-4">
-        <button onclick="backToIntro()" class="text-green-600 hover:underline font-semibold">
-          <i class="fas fa-arrow-left mr-1"></i> Kembali
-        </button>
-        <div class="text-sm text-gray-600">
-          XP: <span id="xp" class="font-bold">0</span> | Level: <span id="level" class="font-bold">1</span>
-        </div>
-      </div>
+  <script>
+    const items = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍋", "🍉", "🍒", "🍑", "🥭", "🍍", "🥥", "🥝", "🍅", "🍆", "🥑", "🥦", "🥬", "🥒", "🌶️"];
+    let xp = parseInt(localStorage.getItem("xp_barang")) || 0;
+    let level = 1;
+    let puzzle = {};
+    let hintsUsed = 0;
 
-      <div class="mb-4">
-        <div class="flex justify-between text-xs text-gray-500 mb-1">
-          <span>Level Progress</span>
-          <span><span id="currentXP">0</span>/20 XP</span>
-        </div>
-        <div class="progress-bar">
-          <div id="xpProgress" class="progress-fill" style="width: 0%"></div>
-        </div>
-      </div>
+    function startGame() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("gameArea").classList.remove("hidden");
+      generatePuzzle();
+    }
 
-      <div id="puzzleBox" class="puzzle-box p-5 text-center mb-6 text-xl font-bold space-y-4 fade-in"></div>
+    function backToIntro() {
+      document.getElementById("gameArea").classList.add("hidden");
+      document.getElementById("intro").classList.remove("hidden");
+    }
 
-      <div class="text-center mb-4">
-        <label class="block text-gray-600 font-semibold mb-1">Nilai dari <span id="targetLabel"></span> adalah:</label>
-        <input type="number" id="userAnswer" class="text-center border-2 border-green-300 rounded-full px-4 py-3 w-32 text-xl font-bold" placeholder="?">
-      </div>
+    function getLevel() {
+      return Math.floor(xp / 50) + 1;
+    }
 
-      <div id="feedback" class="text-center text-lg font-bold hidden mb-4"></div>
-
-      <div class="text-center">
-        <button onclick="checkAnswer()" id="checkBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-full mr-2 button-press">Periksa Jawaban</button>
-        <button onclick="nextPuzzle()" id="nextBtn" class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-full button-press">Soal Berikutnya</button>
-      </div>
-    </div>
-  </div>
-
-<script>
-const items = ["🍔","🍟","🍕","🍎","🍩","🧃","📦","🧸","⚽","📘"];
-let xp = parseInt(localStorage.getItem("xp_barang")) || 0;
-let level = 1;
-let puzzle = {};
-
-function startGame() {
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("gameArea").classList.remove("hidden");
-  generatePuzzle();
-}
-
-function backToIntro() {
-  document.getElementById("gameArea").classList.add("hidden");
-  document.getElementById("intro").classList.remove("hidden");
-}
-
-function getLevel() {
-  return Math.floor(xp / 20) + 1;
-}
-
-function generatePuzzle() {
+    function generatePuzzle() {
   level = getLevel();
+  hintsUsed = 0;
+  document.getElementById("hintBox").style.display = "none";
+
+  // Update UI
   document.getElementById("level").textContent = level;
-  document.getElementById("xp").textContent = xp;
-  document.getElementById("currentXP").textContent = xp % 20;
-  document.getElementById("xpProgress").style.width = ((xp % 20) / 20 * 100) + "%";
+  document.getElementById("currentXP").textContent = xp % 50;
+  const progress = (xp % 50) / 50 * 100;
+  document.getElementById("xpProgress").style.width = `${progress}%`;
 
-  const [a, b] = [...items].sort(() => Math.random() - 0.5);
-  const va = Math.floor(Math.random() * 3 + 2);
-  const vb = Math.floor(Math.random() * 3 + 1);
+  const selectedItems = [...items].sort(() => 0.5 - Math.random()).slice(0, 3);
+  const [a, b, c] = selectedItems;
+  const values = {};
   let html = "";
+  const randomCase = Math.floor(Math.random() * 3); // Untuk soal menengah
 
-  if (level <= 3) {
-    html = `${a} = ${va} + ${vb}`;
-    puzzle = { target: a, value: va + vb };
-  } else if (level <= 6) {
-    html = `${a} = ${va}<br>${b} + ${a} = ${va + vb}`;
-    puzzle = { target: b, value: vb };
+  if (level <= 4) {
+    // LEVEL PEMULA
+    values[a] = Math.floor(Math.random() * 5) + 2;
+    values[b] = Math.floor(Math.random() * 5) + 2;
+
+    html = `
+      <div class="equation-row">${a} = ${values[a]}</div>
+      <div class="equation-row">${a} + ${b} = ${values[a] + values[b]}</div>
+    `;
+
+    puzzle.target = b;
+    puzzle.value = values[b];
+    puzzle.hint = `Kurangi ${values[a] + values[b]} dengan ${values[a]} untuk mendapatkan nilai ${b}`;
+  } else if (level <= 8) {
+    // LEVEL MENENGAH – VARIASI POLA
+    values[a] = Math.floor(Math.random() * 5) + 5;
+    values[b] = Math.floor(Math.random() * 5) + 5;
+    values[c] = Math.floor(Math.random() * 5) + 5;
+
+    if (randomCase === 0) {
+      html = `
+        <div class="equation-row">${b} = ${values[b]}</div>
+        <div class="equation-row">${a} + ${b} = ${values[a] + values[b]}</div>
+        <div class="equation-row">${b} + ${c} = ${values[b] + values[c]}</div>
+      `;
+      puzzle.target = a;
+      puzzle.value = values[a];
+      puzzle.hint = `Gunakan ${b} (${values[b]}) untuk cari ${a} dari ${a} + ${b}`;
+    } else if (randomCase === 1) {
+      html = `
+        <div class="equation-row">${a} = ${values[a]}</div>
+        <div class="equation-row">${a} + ${b} = ${values[a] + values[b]}</div>
+        <div class="equation-row">${b} + ${c} = ${values[b] + values[c]}</div>
+      `;
+      puzzle.target = c;
+      puzzle.value = values[c];
+      puzzle.hint = `Gunakan nilai ${a} dan ${b} dari dua persamaan untuk cari ${c}`;
+    } else {
+      html = `
+        <div class="equation-row">${c} = ${values[c]}</div>
+        <div class="equation-row">${b} + ${c} = ${values[b] + values[c]}</div>
+        <div class="equation-row">${a} + ${b} = ${values[a] + values[b]}</div>
+      `;
+      puzzle.target = a;
+      puzzle.value = values[a];
+      puzzle.hint = `Kurangi ${b + c} dengan ${c}, lalu gunakan untuk cari ${a}`;
+    }
+
+  } else if (level <= 12) {
+    // LEVEL MAHIR
+    values[a] = Math.floor(Math.random() * 5) + 5;
+    values[b] = Math.floor(Math.random() * 5) + 5;
+    values[c] = Math.floor(Math.random() * 5) + 5;
+
+    html = `
+      <div class="equation-row">${a} + ${b} = ${values[a] + values[b]}</div>
+      <div class="equation-row">${a} + ${c} = ${values[a] + values[c]}</div>
+      <div class="equation-row">${b} + ${c} = ${values[b] + values[c]}</div>
+    `;
+    puzzle.target = a;
+    puzzle.value = values[a];
+    puzzle.hint = `Jumlahkan semua persamaan lalu bagi 2 untuk cari total ${a} + ${b} + ${c}, kemudian pecah`;
   } else {
-    html = `${a} + ${b} = ${va + vb}<br>${b} = ${vb}`;
-    puzzle = { target: a, value: va };
+    // LEVEL MASTER
+    values[a] = Math.floor(Math.random() * 5) + 8;
+    const k = Math.floor(Math.random() * 3) + 2;
+    values[b] = values[a] + k;
+    values[c] = Math.floor(Math.random() * 5) + 5;
+
+    html = `
+      <div class="equation-row">${b} = ${a} + ${k}</div>
+      <div class="equation-row">${b} + ${c} = ${values[b] + values[c]}</div>
+      <div class="equation-row">${a} + ${b} = ${values[a] + values[b]}</div>
+    `;
+    puzzle.target = a;
+    puzzle.value = values[a];
+    puzzle.hint = `Gunakan persamaan pertama untuk ganti ${b} dengan ${a} + ${k}, lalu substitusi`;
   }
 
   document.getElementById("puzzleBox").innerHTML = html;
   document.getElementById("targetLabel").textContent = puzzle.target;
   document.getElementById("userAnswer").value = '';
-  document.getElementById("feedback").classList.add("hidden");
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").style.display = "none";
   document.getElementById("checkBtn").classList.remove("hidden");
   document.getElementById("nextBtn").classList.add("hidden");
+  document.getElementById("hintBtn").classList.remove("hidden");
+
+  // Bounce animasi
+  setTimeout(() => {
+    document.querySelectorAll(".equation-row").forEach(el => {
+      el.classList.add("bounce");
+      setTimeout(() => el.classList.remove("bounce"), 700);
+    });
+  }, 100);
 }
+    function showHint() {
+      hintsUsed++;
+      const hintBox = document.getElementById("hintBox");
+      const hintText = document.getElementById("hintText");
+      
+      hintText.textContent = puzzle.hint;
+      hintBox.style.display = "flex";
+      
+      // Kurangi XP jika menggunakan petunjuk
+      if (hintsUsed > 1) {
+        xp = Math.max(0, xp - 5);
+        localStorage.setItem("xp_barang", xp);
+        document.getElementById("currentXP").textContent = xp % 50;
+        const progress = (xp % 50) / 50 * 100;
+        document.getElementById("xpProgress").style.width = `${progress}%`;
+      }
+    }
 
-function checkAnswer() {
-  const guess = parseInt(document.getElementById("userAnswer").value);
-  const feedback = document.getElementById("feedback");
+    function checkAnswer() {
+      const guess = parseInt(document.getElementById("userAnswer").value);
+      const feedback = document.getElementById("feedback");
+      
+      if (isNaN(guess)) {
+        feedback.textContent = "Masukkan angka yang valid!";
+        feedback.className = "feedback incorrect";
+        feedback.style.display = "block";
+        document.getElementById("userAnswer").classList.add("shake");
+        setTimeout(() => document.getElementById("userAnswer").classList.remove("shake"), 400);
+        return;
+      }
 
-  if (guess === puzzle.value) {
-    xp += 10;
-    localStorage.setItem("xp_barang", xp);
-    feedback.textContent = "✅ Benar! +10 XP";
-    feedback.className = "text-center text-lg font-bold text-green-600 mb-4";
-  } else {
-    feedback.textContent = `❌ Salah. Jawaban: ${puzzle.value}`;
-    feedback.className = "text-center text-lg font-bold text-red-600 mb-4";
-  }
+      if (guess === puzzle.value) {
+        const xpGain = 10 + level - hintsUsed;
+        xp += xpGain;
+        localStorage.setItem("xp_barang", xp);
+        
+        feedback.innerHTML = `✅ Benar! +${xpGain} XP`;
+        feedback.className = "feedback correct";
+        
+        // Update progress
+        document.getElementById("currentXP").textContent = xp % 50;
+        const progress = (xp % 50) / 50 * 100;
+        document.getElementById("xpProgress").style.width = `${progress}%`;
+      } else {
+        feedback.textContent = `❌ Salah. Jawaban: ${puzzle.value}`;
+        feedback.className = "feedback incorrect";
+        document.getElementById("userAnswer").classList.add("shake");
+        setTimeout(() => document.getElementById("userAnswer").classList.remove("shake"), 400);
+      }
 
-  feedback.classList.remove("hidden");
-  document.getElementById("checkBtn").classList.add("hidden");
-  document.getElementById("nextBtn").classList.remove("hidden");
-}
-</script>
+      feedback.style.display = "block";
+      document.getElementById("checkBtn").classList.add("hidden");
+      document.getElementById("nextBtn").classList.remove("hidden");
+      document.getElementById("hintBtn").classList.add("hidden");
+    }
+
+    function nextPuzzle() {
+      generatePuzzle();
+    }
+
+    // Inisialisasi game
+    document.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem("xp_barang") !== null) {
+        xp = parseInt(localStorage.getItem("xp_barang"));
+        document.getElementById("level").textContent = getLevel();
+      }
+    });
+  </script>
 </body>
 </html>
